@@ -3,13 +3,14 @@ import TweetPost from "./TweetPost";
 import TweetForm from "./TweetForm";
 import Container from "react-bootstrap/Container";
 import { getTweets, CreateTweetPost } from "../lib/api";
+import Spinner from "react-bootstrap/Spinner";
 
 class TweetPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       posts: [],
-      loading: false,
+      loading: true,
       errorMsg: null,
     };
   }
@@ -61,6 +62,18 @@ class TweetPage extends Component {
           onNewPost={(newPost) => this.handleOnNewPost(newPost)}
           isLoading={this.state.loading}
         />
+        {this.state.loading && (
+          <div>
+            <Spinner animation="grow" variant="primary" />
+            <Spinner animation="grow" variant="secondary" />
+            <Spinner animation="grow" variant="success" />
+            <Spinner animation="grow" variant="danger" />
+            <Spinner animation="grow" variant="warning" />
+            <Spinner animation="grow" variant="info" />
+            <Spinner animation="grow" variant="light" />
+            <Spinner animation="grow" variant="dark" />
+          </div>
+        )}
         {this.state.error ? (
           <div>{this.state.error}</div>
         ) : (
