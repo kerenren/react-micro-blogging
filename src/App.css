@@ -25,11 +25,15 @@
 
 .form-input {
   border: none !important;
+  resize: none;
+}
+
+.form-input:focus {
+  box-shadow: none !important;
 }
 
 .tweet-btn {
   bottom: 35;
-  margin-bottom: 20px;
 }
 
 .post-container {
@@ -46,4 +50,27 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
+}
+
+.button-container {
+  width: 18%;
+  align-self: flex-end;
+}
+
+.errorDiv {
+  font-size: 16px;
+  line-height: 19px;
+  color: #721c24;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 29px;
+  width: 80%;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.input-error-btn-container {
+  margin-bottom: 20px;
 }
