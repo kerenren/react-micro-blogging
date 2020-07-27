@@ -5,12 +5,13 @@ import uuid from "react-uuid";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Spinner from "react-bootstrap/Spinner";
 
 class TweetForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "",
+      content: "",
     };
   }
 
@@ -18,18 +19,18 @@ class TweetForm extends Component {
     event.preventDefault();
     this.props.onNewPost({
       id: uuid() + "",
-      text: this.state.text,
-      createdAt: new Date().toISOString(),
-      userName: "Kelly",
+      content: this.state.content,
+      date: new Date().toISOString(),
+      userName: "Nimo",
     });
     this.setState({
-      text: "",
+      content: "",
     });
   }
 
   handlePostInputChange(event) {
     this.setState({
-      text: event.target.value,
+      content: event.target.value,
     });
   }
   render() {
@@ -42,23 +43,17 @@ class TweetForm extends Component {
             rows="14"
             cols="10"
             wrap="soft"
-            value={this.state.text}
+            value={this.state.content}
             required
             className="form-input "
             placeholder="What you have in mind..."
             onChange={(event) => this.handlePostInputChange(event)}
+            disabled={this.props.isLoading}
           />
           <Container className="input-error-btn-container">
             <Row className="justify-content-center">
-              <Col
-                xs={9}
-                sm={9}
-                md={9}
-                lg={9}
-                xl={9}
-                className="text-left self-align-center"
-              >
-                {this.state.text.length > 140 && (
+              <Col className="text-left self-align-center">
+                {this.state.content.length > 140 && (
                   <div className="errorDiv">
                     The tweet can't contain more then 140 chars.
                   </div>
@@ -72,14 +67,27 @@ class TweetForm extends Component {
                 xl={3}
                 className="button-container text-right"
               >
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="tweet-btn"
-                  disabled={this.state.text.length > 140}
-                >
-                  Tweet
-                </Button>
+                {this.props.isLoading ? (
+                  <Button variant="primary" disabled>
+                    <Spinner
+                      as="span"
+                      animation="grow"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    Loading...
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="tweet-btn"
+                    disabled={this.state.content.length > 140}
+                  >
+                    Tweet
+                  </Button>
+                )}
               </Col>
             </Row>
           </Container>
