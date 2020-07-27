@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import uuid from "react-uuid";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 class TweetForm extends Component {
   constructor(props) {
@@ -17,7 +19,7 @@ class TweetForm extends Component {
     this.props.onNewPost({
       id: uuid() + "",
       text: this.state.text,
-      createdAt: Date.now(),
+      createdAt: new Date().toISOString(),
       userName: "Kelly",
     });
     this.setState({
@@ -35,19 +37,52 @@ class TweetForm extends Component {
       <Container className="input-form-container">
         <Form onSubmit={(event) => this.handleOnSubmit(event)} className="form">
           <Form.Control
-            type="text"
-            as="input"
-            placeholder="What you have in mind..."
-            onChange={(event) => this.handlePostInputChange(event)}
+            as="textarea"
+            name="text"
+            rows="14"
+            cols="10"
+            wrap="soft"
             value={this.state.text}
             required
             className="form-input "
+            placeholder="What you have in mind..."
+            onChange={(event) => this.handlePostInputChange(event)}
           />
-          <div className="text-right button-container">
-            <Button variant="primary" type="submit" className="tweet-btn">
-              Tweet
-            </Button>
-          </div>
+          <Container className="input-error-btn-container">
+            <Row className="justify-content-center">
+              <Col
+                xs={9}
+                sm={9}
+                md={9}
+                lg={9}
+                xl={9}
+                className="text-left self-align-center"
+              >
+                {this.state.text.length > 140 && (
+                  <div className="errorDiv">
+                    The tweet can't contain more then 140 chars.
+                  </div>
+                )}
+              </Col>
+              <Col
+                xs={3}
+                sm={3}
+                md={3}
+                lg={3}
+                xl={3}
+                className="button-container text-right"
+              >
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="tweet-btn"
+                  disabled={this.state.text.length > 140}
+                >
+                  Tweet
+                </Button>
+              </Col>
+            </Row>
+          </Container>
         </Form>
       </Container>
     );
