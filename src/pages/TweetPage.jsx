@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import TweetPost from "./TweetPost";
-import TweetForm from "./TweetForm";
+import TweetPost from "../components/TweetPost";
+import TweetForm from "../components/TweetForm";
 import Container from "react-bootstrap/Container";
 import { getTweets, CreateTweetPost } from "../lib/api";
 import Spinner from "react-bootstrap/Spinner";

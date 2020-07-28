@@ -8,7 +8,7 @@
 }
 
 .input-form-container {
-  background-color: white;
+  background-color: transparent;
   border: 2px solid #cccccc;
   box-sizing: border-box;
   border-radius: 6px;
@@ -73,4 +73,31 @@
 
 .input-error-btn-container {
   margin-bottom: 20px;
+}
+
+.user-page {
+  color: #ffffff;
+  text-align: left;
+}
+
+.user-page h1 {
+  font-size: 36px;
+  line-height: 42px;
+}
+
+.user-page label {
+  font-size: 18px;
+  line-height: 21px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.App input,
+.App input:focus,
+.App textarea,
+.App textarea:focus {
+  border: 2px solid #cccccc;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #ffffff;
 }
