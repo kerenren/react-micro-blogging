@@ -14,6 +14,6 @@ export function CreateTweetPost(post) {
   return axios.post(`${baseUrl}/tweet`, post);
 }
 
-export function createUser(user) {
-  return axios.post(`${baseUrl}/user`, user);
-}
+// export function createUser(user) {
+//   return axios.post(`${baseUrl}/user`, user);
+// }

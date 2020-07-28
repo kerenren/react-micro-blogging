@@ -1,0 +1,13 @@
+.link {
+  font-size: 14px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 20px;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: white;
+}
