@@ -11,48 +11,56 @@ class TweetPage extends Component {
     super(props);
     this.state = {
       posts: [],
-      loading: true,
+      loading: false,
       errorMsg: null,
       onNewPost: (newPost) => this.handleOnNewPost(newPost),
     };
+    this.interval = null;
   }
 
   handleOnNewPost(newPost) {
     this.setState({ loading: true });
-    createTweetPost(newPost)
-      .then((res) => {
-        console.log("success post!", res);
-        this.setState((state) => {
-          return {
-            posts: [newPost, ...state.posts],
-            loading: false,
-            errorMsg: null,
-          };
-        });
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(`client received an error response ${err.response}`);
-        } else if (err.request) {
-          console.log(
-            `client never received a response, or request never left ${err.request}`
-          );
-        } else {
-          console.log(`something went wrong: ${err}`);
-        }
-        this.setState({ errorMsg: err, loading: false });
-      });
-  }
+    localStorage.setItem("list", JSON.stringify(newPost));
+  //   createTweetPost(newPost)
+  //     .then((res) => {
+  //       console.log("success post!", res);
+  //       this.setState((state) => {
+  //         return {
+  //           posts: [newPost, ...state.posts],
+  //           loading: false,
+  //           errorMsg: null,
+  //         };
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       if (err.response) {
+  //         console.log(`client received an error response ${err.response}`);
+  //       } else if (err.request) {
+  //         console.log(
+  //           `client never received a response, or request never left ${err.request}`
+  //         );
+  //       } else {
+  //         console.log(`something went wrong: ${err}`);
+  //       }
+  //       this.setState({ errorMsg: err, loading: false });
+  //     });
+  // }
 
   componentDidMount() {
-    this.fetchTweets().then((response) => {
-      const { tweets } = response.data;
-      this.setState({ posts: tweets, loading: false });
-    });
+    this.setState({ loading: true });
+    this.interval = setInterval(() => {
+      this.fetchTweets().then((response) => {
+        const { tweets } = response.data;
+        this.setState({ posts: tweets, loading: false });
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   async fetchTweets() {
-    this.setState({ loading: true });
     const response = await getTweets();
     return response;
   }
