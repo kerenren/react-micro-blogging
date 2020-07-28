@@ -4,6 +4,7 @@ import TweetForm from "../components/TweetForm";
 import Container from "react-bootstrap/Container";
 import { getTweets, createTweetPost } from "../lib/api";
 import Spinner from "react-bootstrap/Spinner";
+import { MyContext } from "../context";
 
 class TweetPage extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class TweetPage extends Component {
       posts: [],
       loading: true,
       errorMsg: null,
+      onNewPost: (newPost) => this.handleOnNewPost(newPost),
     };
   }
 
@@ -57,29 +59,24 @@ class TweetPage extends Component {
 
   render() {
     return (
-      <Container>
-        <TweetForm
-          onNewPost={(newPost) => this.handleOnNewPost(newPost)}
-          isLoading={this.state.loading}
-        />
-        {this.state.loading && (
-          <div>
-            <Spinner animation="grow" variant="primary" />
-            <Spinner animation="grow" variant="secondary" />
-            <Spinner animation="grow" variant="success" />
-            <Spinner animation="grow" variant="danger" />
-            <Spinner animation="grow" variant="warning" />
-            <Spinner animation="grow" variant="info" />
-            <Spinner animation="grow" variant="light" />
-            <Spinner animation="grow" variant="dark" />
-          </div>
-        )}
-        {this.state.error ? (
-          <div>{this.state.error}</div>
-        ) : (
-          <TweetPost posts={this.state.posts} />
-        )}
-      </Container>
+      <MyContext.Provider value={this.state}>
+        <Container>
+          <TweetForm />
+          {this.state.loading && (
+            <div>
+              <Spinner animation="grow" variant="primary" />
+              <Spinner animation="grow" variant="secondary" />
+              <Spinner animation="grow" variant="success" />
+              <Spinner animation="grow" variant="danger" />
+              <Spinner animation="grow" variant="warning" />
+              <Spinner animation="grow" variant="info" />
+              <Spinner animation="grow" variant="light" />
+              <Spinner animation="grow" variant="dark" />
+            </div>
+          )}
+          {this.state.error ? <div>{this.state.error}</div> : <TweetPost />}
+        </Container>
+      </MyContext.Provider>
     );
   }
 }
