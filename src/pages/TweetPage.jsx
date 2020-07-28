@@ -44,7 +44,7 @@ class TweetPage extends Component {
   //       }
   //       this.setState({ errorMsg: err, loading: false });
   //     });
-  // }
+  }
 
   componentDidMount() {
     this.setState({ loading: true });
