@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import TweetPost from "../components/TweetPost";
 import TweetForm from "../components/TweetForm";
 import Container from "react-bootstrap/Container";
-import { getTweets, CreateTweetPost } from "../lib/api";
+import { getTweets, createTweetPost } from "../lib/api";
 import Spinner from "react-bootstrap/Spinner";
 
 class TweetPage extends Component {
@@ -15,9 +15,9 @@ class TweetPage extends Component {
     };
   }
 
-  async handleOnNewPost(newPost) {
+  handleOnNewPost(newPost) {
     this.setState({ loading: true });
-    CreateTweetPost(newPost)
+    createTweetPost(newPost)
       .then((res) => {
         console.log("success post!", res);
         this.setState((state) => {
@@ -50,8 +50,8 @@ class TweetPage extends Component {
   }
 
   async fetchTweets() {
-    const response = await getTweets();
     this.setState({ loading: true });
+    const response = await getTweets();
     return response;
   }
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "https://fullstack-web-course.ew.r.appspot.com/";
+const baseUrl = "https://fullstack-web-course.ew.r.appspot.com";
 
 export function getTweets() {
   const response = axios.get(`${baseUrl}/tweet`);
@@ -10,7 +10,7 @@ export function getTweets() {
   return response;
 }
 
-export function CreateTweetPost(post) {
+export function createTweetPost(post) {
   return axios.post(`${baseUrl}/tweet`, post);
 }
 
