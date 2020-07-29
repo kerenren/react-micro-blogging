@@ -14,8 +14,8 @@ function App() {
         <Router>
           <NavBar />
           <Switch>
-            <Route path="/Profile">
-              <UserPage  />
+            <Route path="/profile">
+              <UserPage />
             </Route>
             <Route path="/home">
               <TweetPage />
