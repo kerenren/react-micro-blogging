@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Container } from "react-bootstrap";
-import { useState } from "react";
 
 const UserPage = ({ props }) => {
+  const [user, setState] = useState(
+    window.localStorage.getItem("userName") || "Kelly"
+  );
   const handleNewUser = () => {
     localStorage.setItem("userName", user);
   };
-  const [user, setState] = useState(window.localStorage.getItem("userName") || "Kelly");
   const handleOnNameChange = (event) => {
     event.preventDefault();
     setState(event.target.value);

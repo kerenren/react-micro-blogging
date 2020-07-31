@@ -1,19 +1,40 @@
-import axios from "axios";
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/firestore");
 
-const baseUrl = "https://fullstack-web-course.ew.r.appspot.com";
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyBjjDHnZUDYDdphp79fjf6dKStum0G4HYE",
+  authDomain: "react-micro-blogging-kerenren.firebaseapp.com",
+  projectId: "react-micro-blogging-kerenren",
+});
 
-export function getTweets() {
-  const response = axios.get(`${baseUrl}/tweet`);
-  response.catch((error) => {
-    console.warn(`Fail to fetch tweets : ( error message:${error}`);
-  });
-  return response;
+var db = firebase.firestore();
+
+export async function getTweets() {
+  const posts = [];
+  const resp = await db
+    .collection("tweet")
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        // console.log(doc.id, " => ", doc.data());
+        const id = doc.id;
+        posts.push({ id, ...doc.data() });
+      });
+      return posts;
+    });
+  return resp;
 }
 
 export function createTweetPost(post) {
-  return axios.post(`${baseUrl}/tweet`, post);
-}
+  const result = db
+    .collection("tweet")
+    .add(post)
+    .then(function (docRef) {
+      console.log("Document written with ID: ", docRef.id);
+      return docRef;
+    });
 
-// export function createUser(user) {
-//   return axios.post(`${baseUrl}/user`, user);
-// }
+  return result;
+}
