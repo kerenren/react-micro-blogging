@@ -7,33 +7,26 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
 import styles from "./NavBar.module.css";
+import LogOut from "../lib/LogOut";
 
 export const NavBar = (props) => (
   <Container>
     <Navbar bg="dark" variant="dark" className="mb-4">
-      <Navbar.Brand href="/home">
-        My Tweet
-      </Navbar.Brand>
+      <Navbar.Brand href="/home">My Tweet</Navbar.Brand>
       <Nav className="mr-auto">
-        <Link
-          to="/home"
-          className={styles.link}
-        >
+        <Link to="/home" className={styles.link}>
           Home
         </Link>
-        <Link
-          to="/profile"
-          className={styles.link}
-        >
+        <Link to="/profile" className={styles.link}>
           Profile
         </Link>
-        <Link to="/Signup" className={styles.link}>
+        <Link to="/signup" className={styles.link}>
           Signup
         </Link>
-        <Link to="/Login" className={styles.link}>
+        <Link to="/login" className={styles.link}>
           Login
         </Link>
-        <Link to="/Logout" className={styles.link}>
+        <Link to="/logout" className={styles.link} onClick={LogOut}>
           Logout
         </Link>
       </Nav>

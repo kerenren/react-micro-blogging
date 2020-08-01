@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 
 const UserPage = ({ props }) => {
   const [user, setState] = useState(
-    window.localStorage.getItem("userName") || "Kelly"
+    window.localStorage.getItem("userName") || ""
   );
   const handleNewUser = () => {
     localStorage.setItem("userName", user);

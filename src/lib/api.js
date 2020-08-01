@@ -1,13 +1,9 @@
-const firebase = require("firebase");
+import fire from "./Fire";
+
+const firebase = fire;
 // Required for side-effects
 require("firebase/firestore");
 
-// Initialize Cloud Firestore through Firebase
-firebase.initializeApp({
-  apiKey: "AIzaSyBjjDHnZUDYDdphp79fjf6dKStum0G4HYE",
-  authDomain: "react-micro-blogging-kerenren.firebaseapp.com",
-  projectId: "react-micro-blogging-kerenren",
-});
 
 var db = firebase.firestore();
 
@@ -18,7 +14,6 @@ export async function getTweets() {
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
-        // console.log(doc.id, " => ", doc.data());
         const id = doc.id;
         posts.push({ id, ...doc.data() });
       });
