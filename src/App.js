@@ -33,15 +33,17 @@ function App() {
     <div className="App">
       <Container fluid="sm">
         <Router>
-          <NavBar />
+          <NavBar user={user}/>
           <Switch>
             <Route path="/profile">
               <UserPage />
             </Route>
-            <Route path="/home">{user ? <TweetPage /> : <LoginPage />}</Route>
+            <Route path="/home">
+              {user ? <TweetPage /> : <LoginPage />}
+            </Route>
             <Route path="/login">{user ? <TweetPage /> : <LoginPage />}</Route>
             <Route path="/signup">
-              <SignUpPage />
+              <LoginPage />
             </Route>
             <Route path="/logout">
               <LoginPage />

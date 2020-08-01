@@ -20,15 +20,15 @@ export const NavBar = (props) => (
         <Link to="/profile" className={styles.link}>
           Profile
         </Link>
-        <Link to="/signup" className={styles.link}>
+        {!props.user && <Link to="/signup" className={styles.link}>
           Signup
-        </Link>
-        <Link to="/login" className={styles.link}>
+        </Link>}
+        {!props.user && <Link to="/login" className={styles.link}>
           Login
-        </Link>
-        <Link to="/logout" className={styles.link} onClick={LogOut}>
+        </Link>}
+        {props.user && <Link to="/logout" className={styles.link} onClick={LogOut}>
           Logout
-        </Link>
+        </Link>}
       </Nav>
       <Form inline>
         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
