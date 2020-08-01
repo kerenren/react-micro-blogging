@@ -21,67 +21,65 @@ class TweetPage extends Component {
   handleOnNewPost(newPost) {
     this.setState({ loading: true });
     localStorage.setItem("list", JSON.stringify(newPost));
-  //   createTweetPost(newPost)
-  //     .then((res) => {
-  //       console.log("success post!", res);
-  //       this.setState((state) => {
-  //         return {
-  //           posts: [newPost, ...state.posts],
-  //           loading: false,
-  //           errorMsg: null,
-  //         };
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       if (err.response) {
-  //         console.log(`client received an error response ${err.response}`);
-  //       } else if (err.request) {
-  //         console.log(
-  //           `client never received a response, or request never left ${err.request}`
-  //         );
-  //       } else {
-  //         console.log(`something went wrong: ${err}`);
-  //       }
-  //       this.setState({ errorMsg: err, loading: false });
-  //     });
-  }
-
-  componentDidMount() {
-    this.setState({ loading: true });
-    this.interval = setInterval(() => {
-      this.fetchTweets().then((response) => {
-        const { tweets } = response.data;
-        this.setState({ posts: tweets, loading: false });
+    createTweetPost(newPost)
+      .then((res) => {
+        console.log("success post!", res);
+        this.setState((state) => {
+          return {
+            posts: [newPost, ...state.posts],
+            loading: false,
+            errorMsg: null,
+          };
+        });
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(`client received an error response ${err.response}`);
+        } else if (err.request) {
+          console.log(
+            `client never received a response, or request never left ${err.request}`
+          );
+        } else {
+          console.log(`something went wrong: ${err}`);
+        }
+        this.setState({ errorMsg: err, loading: false });
       });
-    }, 1000);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
+  async componentDidMount() {
+    this.setState({ loading: true });
+    // this.interval = setInterval(() => {
+    const posts = await getTweets();
+    console.log("posts from tweet page", posts);
+    this.setState({ posts: posts, loading: false });
+    // }, 5000);
   }
 
-  async fetchTweets() {
-    const response = await getTweets();
-    return response;
-  }
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // }
 
+  renderSpinner() {
+    const variants = [
+      "primary",
+      "secondary",
+      "success",
+      "danger",
+      "warning",
+      "info",
+      "light",
+      "dark",
+    ];
+    return variants.map((variant) => {
+      return <Spinner animation="grow" variant={variant} key={variant} />;
+    });
+  }
   render() {
     return (
       <MyContext.Provider value={this.state}>
         <Container>
           <TweetForm />
-          {this.state.loading && (
-            <div>
-              <Spinner animation="grow" variant="primary" />
-              <Spinner animation="grow" variant="secondary" />
-              <Spinner animation="grow" variant="success" />
-              <Spinner animation="grow" variant="danger" />
-              <Spinner animation="grow" variant="warning" />
-              <Spinner animation="grow" variant="info" />
-              <Spinner animation="grow" variant="light" />
-              <Spinner animation="grow" variant="dark" />
-            </div>
-          )}
+          {this.state.loading && <div>{this.renderSpinner()}</div>}
           {this.state.error ? <div>{this.state.error}</div> : <TweetPost />}
         </Container>
       </MyContext.Provider>

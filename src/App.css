@@ -101,3 +101,13 @@
   background-color: transparent;
   color: #ffffff;
 }
+
+.loginGoogleBtn {
+  height: 38px
+}
+
+.signUpGoogleIcon {
+  background-color: white;
+  width: 30px;
+  height: 30px
+}

@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
 import styles from "./NavBar.module.css";
+import LogOut from "../lib/LogOut";
 
 export const NavBar = (props) => (
   <Container>
@@ -16,18 +17,18 @@ export const NavBar = (props) => (
         <Link to="/home" className={styles.link}>
           Home
         </Link>
-        <Link to="/Profile" className={styles.link}>
+        <Link to="/profile" className={styles.link}>
           Profile
         </Link>
-        <Link to="/Signup" className={styles.link}>
+        {!props.user && <Link to="/signup" className={styles.link}>
           Signup
-        </Link>
-        <Link to="/Login" className={styles.link}>
+        </Link>}
+        {!props.user && <Link to="/login" className={styles.link}>
           Login
-        </Link>
-        <Link to="/Logout" className={styles.link}>
+        </Link>}
+        {props.user && <Link to="/logout" className={styles.link} onClick={LogOut}>
           Logout
-        </Link>
+        </Link>}
       </Nav>
       <Form inline>
         <FormControl type="text" placeholder="Search" className="mr-sm-2" />

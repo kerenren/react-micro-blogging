@@ -1,19 +1,44 @@
-import axios from "axios";
+import fire from "./Fire";
 
-const baseUrl = "https://fullstack-web-course.ew.r.appspot.com";
+const firebase = fire;
+// Required for side-effects
+require("firebase/firestore");
 
-export function getTweets() {
-  const response = axios.get(`${baseUrl}/tweet`);
-  response.catch((error) => {
-    console.warn(`Fail to fetch tweets : ( error message:${error}`);
-  });
-  return response;
+var db = firebase.firestore();
+
+export async function getTweets() {
+  const posts = [];
+  const resp = await db
+    .collection("tweet")
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        posts.push({ ...doc.data() });
+      });
+      return posts;
+    });
+  return resp;
 }
 
 export function createTweetPost(post) {
-  return axios.post(`${baseUrl}/tweet`, post);
+  const result = db
+    .collection("tweet")
+    .add(post)
+    .then(function (docRef) {
+      console.log("Document written with ID: ", docRef.id);
+      return docRef;
+    });
+
+  return result;
 }
 
-// export function createUser(user) {
-//   return axios.post(`${baseUrl}/user`, user);
-// }
+export function addUserToDB(user) {
+  //TODO if userid exists IN USERS db then use update IF NULL use set
+  db.collection("users").doc(user.uid).set({
+    id: user.uid,
+    userName: user.displayName,
+    email: user.email,
+    phone: user.phoneNumber,
+    photoURL: user.photoURL,
+  });
+}

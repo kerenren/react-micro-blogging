@@ -4,7 +4,6 @@ import Col from "react-bootstrap/Col";
 import { MyContext } from "../context";
 
 function TweetPost() {
-
   return (
     <MyContext.Consumer>
       {({ posts }) =>

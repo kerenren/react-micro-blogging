@@ -5,10 +5,12 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Micro blog created by Kelly" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="google-signin-client_id"
+      content="872347003798-ghhvoed37hm5mgj255as5h8qoknf217c.apps.googleusercontent.com"
     />
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -39,5 +41,31 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyBjjDHnZUDYDdphp79fjf6dKStum0G4HYE",
+        authDomain: "react-micro-blogging-kerenren.firebaseapp.com",
+        databaseURL: "https://react-micro-blogging-kerenren.firebaseio.com",
+        projectId: "react-micro-blogging-kerenren",
+        storageBucket: "react-micro-blogging-kerenren.appspot.com",
+        messagingSenderId: "872347003798",
+        appId: "1:872347003798:web:59d415c948dff4c4ed0bb7",
+        measurementId: "G-YBCKH5EH9E",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
   </body>
 </html>
