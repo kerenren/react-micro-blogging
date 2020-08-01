@@ -4,7 +4,6 @@ const firebase = fire;
 // Required for side-effects
 require("firebase/firestore");
 
-
 var db = firebase.firestore();
 
 export async function getTweets() {
@@ -14,8 +13,7 @@ export async function getTweets() {
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
-        const id = doc.id;
-        posts.push({ id, ...doc.data() });
+        posts.push({ ...doc.data() });
       });
       return posts;
     });
@@ -32,4 +30,15 @@ export function createTweetPost(post) {
     });
 
   return result;
+}
+
+export function addUserToDB(user) {
+  //TODO if userid exists IN USERS db then use update IF NULL use set
+  db.collection("users").doc(user.uid).set({
+    id: user.uid,
+    userName: user.displayName,
+    email: user.email,
+    phone: user.phoneNumber,
+    photoURL: user.photoURL,
+  });
 }

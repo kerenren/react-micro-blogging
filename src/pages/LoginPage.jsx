@@ -7,6 +7,7 @@ import fire from "../lib/Fire.js";
 import { useHistory, useLocation } from "react-router-dom";
 import googleLogin from "../img/btn_google_signin.png";
 import googleIcon from "../img/btn_google_dark_normal_ios.png";
+import {addUserToDB} from "../lib/api";
 
 export default function LoginPage(props) {
   const [email, setEmail] = useState(undefined);
@@ -18,11 +19,10 @@ export default function LoginPage(props) {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((u) => {})
-      .catch((e) => console.log(e));
+      .catch((e) => alert(e.message));
   };
 
   const firebase = require("firebase");
-  const db = firebase.firestore();
   var googleProvider = new firebase.auth.GoogleAuthProvider();
   const history = useHistory();
   useEffect(() => {
@@ -43,13 +43,7 @@ export default function LoginPage(props) {
         localStorage.setItem("photoURL", user.photoURL);
         localStorage.setItem("userName", user.displayName);
         //TODO if userid exists IN USERS db then use update IF NULL use set
-        await db.collection("users").doc(user.uid).set({
-          id: user.uid,
-          userName: user.displayName,
-          email: user.email,
-          phone: user.phoneNumber,
-          photoURL: user.photoURL,
-        });
+        addUserToDB(user);
       })
       .then(() => {
         history.push("/home");

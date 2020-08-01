@@ -21,6 +21,7 @@ class TweetForm extends Component {
       content: this.state.content,
       date: new Date().toISOString(),
       userName: window.localStorage.getItem("userName"),
+      userId: window.localStorage.getItem("userid"),
     });
     this.setState({
       content: "",
