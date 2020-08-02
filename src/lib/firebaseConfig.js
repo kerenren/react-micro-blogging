@@ -1,8 +1,3 @@
-import firebase from "firebase";
-
-require("firebase/firestore");
-
-
 const firebaseConfig = {
   apiKey: "AIzaSyBjjDHnZUDYDdphp79fjf6dKStum0G4HYE",
   authDomain: "react-micro-blogging-kerenren.firebaseapp.com",
@@ -14,10 +9,4 @@ const firebaseConfig = {
   measurementId: "G-YBCKH5EH9E",
 };
 
-const fire = firebase.initializeApp(firebaseConfig);
-// Initialize Cloud Firestore through Firebase
-export const db = firebase.firestore();
-
-export default fire;
-
-
+export default firebaseConfig

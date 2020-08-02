@@ -6,8 +6,8 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import { Link } from "react-router-dom";
-import styles from "./NavBar.module.css";
-import LogOut from "../lib/LogOut";
+import styles from "../style/NavBar.module.css";
+import { logout } from "../lib/Firebase";
 
 export const NavBar = (props) => (
   <Container>
@@ -20,15 +20,21 @@ export const NavBar = (props) => (
         <Link to="/profile" className={styles.link}>
           Profile
         </Link>
-        {!props.user && <Link to="/signup" className={styles.link}>
-          Signup
-        </Link>}
-        {!props.user && <Link to="/login" className={styles.link}>
-          Login
-        </Link>}
-        {props.user && <Link to="/logout" className={styles.link} onClick={LogOut}>
-          Logout
-        </Link>}
+        {!props.user && (
+          <Link to="/signup" className={styles.link}>
+            Signup
+          </Link>
+        )}
+        {!props.user && (
+          <Link to="/login" className={styles.link}>
+            Login
+          </Link>
+        )}
+        {props.user && (
+          <Link to="/logout" className={styles.link} onClick={logout}>
+            Logout
+          </Link>
+        )}
       </Nav>
       <Form inline>
         <FormControl type="text" placeholder="Search" className="mr-sm-2" />

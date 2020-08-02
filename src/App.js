@@ -6,15 +6,13 @@ import TweetPage from "./pages/TweetPage";
 import { NavBar } from "./components/NavBar";
 import UserPage from "./pages/UserPage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import fire from "./lib/Fire";
-import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/signUpPage";
+import LoginSignupPage from "./pages/LoginSignupPage";
 
 function App() {
   const [user, setState] = useState(
     window.localStorage.getItem("userName") || null
   );
-
+  const fire = require("firebase");
   useEffect(() => {
     authListner();
   }, []);
@@ -33,20 +31,22 @@ function App() {
     <div className="App">
       <Container fluid="sm">
         <Router>
-          <NavBar user={user}/>
+          <NavBar user={user} />
           <Switch>
             <Route path="/profile">
               <UserPage />
             </Route>
             <Route path="/home">
-              {user ? <TweetPage /> : <LoginPage />}
+              {user ? <TweetPage /> : <LoginSignupPage />}
             </Route>
-            <Route path="/login">{user ? <TweetPage /> : <LoginPage />}</Route>
+            <Route path="/login">
+              {user ? <TweetPage /> : <LoginSignupPage />}
+            </Route>
             <Route path="/signup">
-              <LoginPage />
+              <LoginSignupPage />
             </Route>
             <Route path="/logout">
-              <LoginPage />
+              <LoginSignupPage />
             </Route>
           </Switch>
         </Router>
