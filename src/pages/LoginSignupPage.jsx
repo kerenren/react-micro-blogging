@@ -6,23 +6,20 @@ import Button from "react-bootstrap/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import googleLogin from "../img/btn_google_signin.png";
 import googleIcon from "../img/btn_google_dark_normal_ios.png";
-
-import {
-  loginByEmail,
-  signupByEmail,
-  loginByGoogle,
-} from "../lib/Firebase";
+import InputGroup from "react-bootstrap/InputGroup";
+import { loginByEmail, signupByEmail, loginByGoogle } from "../lib/Firebase";
 
 export default function LoginSignupPage(props) {
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
+  const [userName, setUsername] = useState(undefined);
   const location = useLocation();
 
   const handleSubmit = (e) => {
     if (location.pathname === "/login") {
       loginByEmail(e, email, password);
     } else {
-      signupByEmail(e, email, password);
+      signupByEmail(e, email, password, userName);
     }
   };
 
@@ -36,6 +33,29 @@ export default function LoginSignupPage(props) {
   return (
     <div>
       <Form>
+        {location.pathname !== "/login" && (
+          <Form.Group as={Row} >
+            <Form.Label column sm={2}>
+              Username
+            </Form.Label>
+            <Col sm={10}>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  placeholder="Username"
+                  aria-describedby="inputGroupPrepend"
+                  name="username"
+                  value={userName || ""}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
+                />
+              </InputGroup>
+            </Col>
+          </Form.Group>
+        )}
         <Form.Group as={Row} controlId="formHorizontalEmail">
           <Form.Label column sm={2}>
             Email
@@ -47,6 +67,7 @@ export default function LoginSignupPage(props) {
               name="email"
               value={email || ""}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
             />
           </Col>
         </Form.Group>

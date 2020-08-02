@@ -1,5 +1,5 @@
-
 import { addUserToDB } from "./api";
+import { updateDisplayName } from "./User";
 
 const firebase = require("firebase");
 require("firebase/firestore");
@@ -11,18 +11,21 @@ export const loginByEmail = (e, email, password) => {
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .then((r) => {
-      console.log(r.user);
-      console.log(r.user.uid);
+    .then((results) => {
+      console.log("signed in with user: ", results.user);
+      localStorage.setItem("userName", results.user.displayName);
     })
     .catch((e) => alert(e.message));
 };
 
-export const signupByEmail = (e, email, password) => {
+export const signupByEmail = (e, email, password, userName) => {
   e.preventDefault();
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
+    .then((results) => {
+      updateDisplayName(results.user, userName);
+    })
     .catch(function (error) {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -73,6 +76,7 @@ export const loginByGoogle = (history) => {
 };
 
 export const logout = () => {
+  localStorage.setItem("userName", "");
   console.log("you have logged out your account");
   firebase.auth().signOut();
 };
