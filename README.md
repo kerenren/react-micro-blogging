@@ -1,3 +1,10 @@
+before start:
+ debug error: "zsh: command not found: firebase" issue details: https://github.com/firebase/firebase-tools/issues/113
+ to fix:
+ 1. update to the latest version: https://firebase.google.com/docs/cli#mac-linux-npm
+ 2. if the issue is reproducible: run in terminal alias firebase="`npm config get prefix`/bin/firebase"
+
+
 
 Micro blogging project
 ______________________________________________________________________________________

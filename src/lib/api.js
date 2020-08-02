@@ -1,10 +1,8 @@
-import fire from "./Fire";
-
-const firebase = fire;
-// Required for side-effects
+import firebaseConfig from "./firebaseConfig";
+const firebase = require("firebase");
+firebase.initializeApp(firebaseConfig);
 require("firebase/firestore");
-
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 export async function getTweets() {
   const posts = [];
