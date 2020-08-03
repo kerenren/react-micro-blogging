@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Container } from "react-bootstrap";
-import { uploadTask } from "../lib/Firebase";
+import { firebase, storage } from "../lib/Firebase";
+import { updatePhotoURL } from "../lib/User";
+import styles from "../style/UserPage.module.css";
 
 const UserPage = ({ props }) => {
   const [user, setState] = useState(
     window.localStorage.getItem("userName") || ""
   );
-  const allInputs = { imgUrl: "" };
+
   const [imageAsFile, setImageAsFile] = useState("");
-  const [imageAsUrl, setImageAsUrl] = useState(allInputs);
+  const [imageAsUrl, setImageAsUrl] = useState("");
   const handleFireBaseUpload = (e) => {
     localStorage.setItem("userName", user);
     e.preventDefault();
@@ -18,7 +20,41 @@ const UserPage = ({ props }) => {
     if (imageAsFile === "") {
       console.error(`not an image, the image file is a ${typeof imageAsFile}`);
     }
-    uploadTask(imageAsFile);
+
+    var file = imageAsFile;
+
+    var metadata = {
+      contentType: "image/jpeg",
+    };
+
+    var uploadTask = storage.ref(`/images/${file.name}`).put(file, metadata);
+
+    uploadTask.on(
+      firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+      function (snapshot) {
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case firebase.storage.TaskState.PAUSED: // or 'paused'
+            console.log("Upload is paused");
+            break;
+          case firebase.storage.TaskState.RUNNING: // or 'running'
+            console.log("Upload is running");
+            break;
+        }
+      },
+      function (error) {
+        alert(error.message);
+      },
+      function () {
+        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+          console.log("File available at", downloadURL);
+          setImageAsUrl(() => downloadURL);
+          const user = firebase.auth().currentUser;
+          updatePhotoURL(user, downloadURL);
+        });
+      }
+    );
   };
 
   const handleOnNameChange = (event) => {
@@ -61,7 +97,13 @@ const UserPage = ({ props }) => {
           </Button>
         </div>
       </Form>
-      {imageAsUrl.imgUrl && <img src={imageAsUrl.imgUrl} alt="user profile tag" />}
+      {imageAsUrl !== "" && (
+        <img
+          className={styles.profile_img}
+          src={imageAsUrl}
+          alt="user profile tag"
+        />
+      )}
     </Container>
   );
 };

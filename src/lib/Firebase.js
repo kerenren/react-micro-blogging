@@ -1,20 +1,14 @@
 import { addUserToDB } from "./api";
-import { updateDisplayName, currentUser } from "./User";
+import { updateDisplayName } from "./User";
 import "firebase/storage";
 
-const firebase = require("firebase");
+export const firebase = require("firebase");
 require("firebase/firestore");
 
-const db = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 export const storage = firebase.storage();
 
-var storageRef = storage.ref().child("profiles");
-var fileName = "profile.png";
-export const uploadTask = (imageAsFile) => {
-  storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile);
-};
 
 export const loginByEmail = (e, email, password) => {
   e.preventDefault();
