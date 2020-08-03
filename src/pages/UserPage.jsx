@@ -1,20 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Container } from "react-bootstrap";
 import { firebase, storage } from "../lib/Firebase";
 import { updatePhotoURL } from "../lib/User";
 import styles from "../style/UserPage.module.css";
+import { UserContext } from "../context";
 
 const UserPage = ({ props }) => {
-  const [user, setState] = useState(
+  const data = useContext(UserContext);
+  // console.log(data.currentUser)
+  const currentUser = data.currentUser;
+  if (currentUser !== null) {
+    console.log(currentUser.displayName);
+    // setState(currentUser.displayName)
+  }
+
+  const [userName, setState] = useState(
     window.localStorage.getItem("userName") || ""
   );
 
   const [imageAsFile, setImageAsFile] = useState("");
   const [imageAsUrl, setImageAsUrl] = useState("");
   const handleFireBaseUpload = (e) => {
-    localStorage.setItem("userName", user);
+    localStorage.setItem("userName", userName);
     e.preventDefault();
     console.log("start of upload");
     if (imageAsFile === "") {
@@ -78,7 +87,7 @@ const UserPage = ({ props }) => {
           <Form.Control
             type="text"
             placeholder="Enter user name"
-            value={user}
+            value={userName}
             onChange={handleOnNameChange}
           />
         </Form.Group>

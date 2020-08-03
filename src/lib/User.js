@@ -1,5 +1,3 @@
-const firebase = require("firebase");
-
 export const updateDisplayName = (user, userName) => {
   user
     .updateProfile({
@@ -9,7 +7,7 @@ export const updateDisplayName = (user, userName) => {
       function () {
         localStorage.setItem("userName", user.displayName);
         var displayName = user.displayName;
-        console.log("Profile updated successfully! new name:", displayName);
+        console.log("Profile updated successfully! User name:", displayName);
       },
       function (error) {
         alert(error.message);

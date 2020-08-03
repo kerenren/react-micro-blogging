@@ -1,8 +1,6 @@
-import firebaseConfig from "./firebaseConfig";
-const firebase = require("firebase");
-firebase.initializeApp(firebaseConfig);
-require("firebase/firestore");
-const db = firebase.firestore();
+import {cloudDB} from "./firebaseConfig"
+
+const db = cloudDB
 
 export async function getTweets() {
   const posts = [];

@@ -28,7 +28,7 @@ export default function LoginSignupPage(props) {
     setTimeout(() => {
       history.push("/home");
     }, 10000);
-  }, []);
+  }, [history]);
 
   return (
     <div>
@@ -100,7 +100,6 @@ export default function LoginSignupPage(props) {
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
             <div
-              className="g-signin2"
               onClick={() => loginByGoogle(history)}
               data-onsuccess="onSignIn"
             >

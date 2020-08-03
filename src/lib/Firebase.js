@@ -3,7 +3,6 @@ import { updateDisplayName } from "./User";
 import "firebase/storage";
 
 export const firebase = require("firebase");
-require("firebase/firestore");
 
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -18,6 +17,7 @@ export const loginByEmail = (e, email, password) => {
     .then((results) => {
       console.log("signed in with user: ", results.user);
       localStorage.setItem("userName", results.user.displayName);
+      addUserToDB(results.user)
     })
     .catch((e) => alert(e.message));
 };
@@ -29,6 +29,7 @@ export const signupByEmail = (e, email, password, userName) => {
     .createUserWithEmailAndPassword(email, password)
     .then((results) => {
       updateDisplayName(results.user, userName);
+      addUserToDB(results.user)
     })
     .catch(function (error) {
       var errorCode = error.code;

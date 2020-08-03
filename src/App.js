@@ -8,12 +8,16 @@ import UserPage from "./pages/UserPage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LoginSignupPage from "./pages/LoginSignupPage";
 import { cloudDB } from "./lib/firebaseConfig";
+import { UserContext } from "./context";
 
 function App() {
   const [user, setState] = useState(
     window.localStorage.getItem("userName") || null
   );
   const [tweets, setTweets] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const logout = () => setCurrentUser(null);
 
   useEffect(() => {
     const firebase = require("firebase");
@@ -21,6 +25,16 @@ function App() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           setState(user);
+          setCurrentUser({
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid,
+            emailVerified: user.emailVerified,
+            phoneNumber: user.phoneNumber,
+            creationTime: user.metadata.creationTime,
+            lastSignInTime: user.metadata.lastSignInTime,
+          });
         } else {
           setState(null);
         }
@@ -49,6 +63,7 @@ function App() {
 
   return (
     <div className="App">
+      <UserContext.Provider value={{ currentUser, setCurrentUser, logout }}>
         <Router>
           <NavBar user={user} />
           <Container fluid="sm">
@@ -71,6 +86,7 @@ function App() {
             </Switch>
           </Container>
         </Router>
+      </UserContext.Provider>
     </div>
   );
 }
