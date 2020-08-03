@@ -10,7 +10,7 @@ class TweetPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: [],
+      posts: props.tweets,
       loading: false,
       errorMsg: null,
       onNewPost: (newPost) => this.handleOnNewPost(newPost),
@@ -18,6 +18,12 @@ class TweetPage extends Component {
     this.interval = null;
   }
 
+  componentDidUpdate() {
+    if (this.state.posts !== this.props.tweets) {
+      this.setState({ posts: this.props.tweets });
+    }
+  }
+  
   handleOnNewPost(newPost) {
     this.setState({ loading: true });
     localStorage.setItem("list", JSON.stringify(newPost));
@@ -51,7 +57,6 @@ class TweetPage extends Component {
     const posts = await getTweets();
     this.setState({ posts: posts, loading: false });
   }
-
 
   renderSpinner() {
     const variants = [

@@ -49,28 +49,28 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <NavBar user={user} />
-        <Container fluid="sm">
-          <Switch>
-            <Route path="/profile">
-              <UserPage />
-            </Route>
-            <Route path="/home">
-              {user ? <TweetPage /> : <LoginSignupPage />}
-            </Route>
-            <Route path="/login">
-              {user ? <TweetPage /> : <LoginSignupPage />}
-            </Route>
-            <Route path="/signup">
-              <LoginSignupPage />
-            </Route>
-            <Route path="/logout">
-              <LoginSignupPage />
-            </Route>
-          </Switch>
-        </Container>
-      </Router>
+        <Router>
+          <NavBar user={user} />
+          <Container fluid="sm">
+            <Switch>
+              <Route path="/profile">
+                <UserPage />
+              </Route>
+              <Route path="/home">
+                {user ? <TweetPage tweets={tweets} /> : <LoginSignupPage />}
+              </Route>
+              <Route path="/login">
+                {user ? <TweetPage tweets={tweets} /> : <LoginSignupPage />}
+              </Route>
+              <Route path="/signup">
+                <LoginSignupPage />
+              </Route>
+              <Route path="/logout">
+                <LoginSignupPage />
+              </Route>
+            </Switch>
+          </Container>
+        </Router>
     </div>
   );
 }
