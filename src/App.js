@@ -7,25 +7,45 @@ import { NavBar } from "./components/NavBar";
 import UserPage from "./pages/UserPage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LoginSignupPage from "./pages/LoginSignupPage";
+import { cloudDB } from "./lib/firebaseConfig";
 
 function App() {
   const [user, setState] = useState(
     window.localStorage.getItem("userName") || null
   );
-  const fire = require("firebase");
-  useEffect(() => {
-    authListner();
-  }, []);
+  const [tweets, setTweets] = useState([]);
 
-  function authListner() {
-    fire.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setState(user);
-      } else {
-        setState(null);
-      }
-    });
-  }
+  useEffect(() => {
+    const firebase = require("firebase");
+    function authListner() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          setState(user);
+        } else {
+          setState(null);
+        }
+      });
+    }
+
+    function tweetListner() {
+      const newTweet = [];
+      cloudDB.collection("tweet").onSnapshot(function (snapshot) {
+        snapshot.docChanges().forEach(function (change) {
+          newTweet.push(change.doc.data());
+        });
+        setTweets(() => [...newTweet]);
+      });
+    }
+    const unsubscribeTweetListner = cloudDB
+      .collection("tweet")
+      .onSnapshot(function () {
+        setTweets(() => []);
+      });
+
+    authListner();
+    tweetListner();
+    return unsubscribeTweetListner();
+  }, []);
 
   return (
     <div className="App">

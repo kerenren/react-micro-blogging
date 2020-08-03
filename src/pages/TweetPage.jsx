@@ -48,16 +48,10 @@ class TweetPage extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    // this.interval = setInterval(() => {
     const posts = await getTweets();
-    console.log("posts from tweet page", posts);
     this.setState({ posts: posts, loading: false });
-    // }, 5000);
   }
 
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // }
 
   renderSpinner() {
     const variants = [
