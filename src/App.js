@@ -29,9 +29,9 @@ function App() {
 
   return (
     <div className="App">
-      <Container fluid="sm">
-        <Router>
-          <NavBar user={user} />
+      <Router>
+        <NavBar user={user} />
+        <Container fluid="sm">
           <Switch>
             <Route path="/profile">
               <UserPage />
@@ -49,8 +49,8 @@ function App() {
               <LoginSignupPage />
             </Route>
           </Switch>
-        </Router>
-      </Container>
+        </Container>
+      </Router>
     </div>
   );
 }
