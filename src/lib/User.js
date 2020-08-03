@@ -1,5 +1,4 @@
 const firebase = require("firebase");
-export const currentUser = firebase.auth().currentUser;
 
 export const updateDisplayName = (user, userName) => {
   user
@@ -9,6 +8,23 @@ export const updateDisplayName = (user, userName) => {
     .then(
       function () {
         localStorage.setItem("userName", user.displayName);
+        var displayName = user.displayName;
+        console.log("Profile updated successfully! new name:", displayName);
+      },
+      function (error) {
+        alert(error.message);
+      }
+    );
+};
+
+export const updatePhotoURL = (user, userPhotoURL) => {
+  user
+    .updateProfile({
+      photoURL: userPhotoURL,
+    })
+    .then(
+      function () {
+        localStorage.setItem("photoURL", user.photoURL);
         var displayName = user.displayName;
         console.log("Profile updated successfully! new name:", displayName);
       },
