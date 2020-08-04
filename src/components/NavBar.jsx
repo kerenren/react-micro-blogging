@@ -15,9 +15,11 @@ export const NavBar = (props) => (
       <Link to="/home" className={styles.link}>
         Home
       </Link>
-      <Link to="/profile" className={styles.link}>
-        Profile
-      </Link>
+      {props.user && (
+        <Link to="/profile" className={styles.link}>
+          Profile
+        </Link>
+      )}
       {!props.user && (
         <Link to="/signup" className={styles.link}>
           Signup

@@ -6,19 +6,30 @@ import { createTweetPost } from "../lib/api";
 import Spinner from "react-bootstrap/Spinner";
 import { MyContext } from "../context";
 import { cloudDB } from "../lib/firebaseConfig";
+import BottomScrollListener from "react-bottom-scroll-listener";
 
 function TweetPage(props) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [monitoredTweets, setMonitoredTweets] = useState(null);
   const [newPost, setNewPost] = useState({});
+  const [lastVisible, setLastVisible] = useState(null);
 
   useEffect(() => {
-    if (posts.length !== props.tweets.length) {
-      setMonitoredTweets(props.tweets);
+    if (posts[0] !== undefined && props.tweets[0] !== undefined) {
+      if (posts[0].date !== props.tweets[0].date) {
+        firstFetch();
+      }
     }
   });
+
+  useEffect(() => {
+    try {
+      firstFetch();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   function handleOnNewPost(newPost) {
     setLoading(true);
@@ -46,45 +57,51 @@ function TweetPage(props) {
       });
   }
 
-  function firstFetch() {
-    const posts = [];
-    const firstResponse = cloudDB
+  async function firstFetch() {
+    // setLoading(true);
+    const firstResponse = await cloudDB
       .collection("tweet")
       .orderBy("date", "desc")
       .limit(10);
-    firstResponse.get().then(function (documentSnapshots) {
-      const lastVisible =
-        documentSnapshots.docs[documentSnapshots.docs.length - 1];
-      console.log("last", lastVisible);
-      const nextResponse = cloudDB
-        .collection("tweet")
-        .orderBy("date", "desc")
-        .startAfter(lastVisible)
-        .limit(10);
-      documentSnapshots.forEach(function (doc) {
-        posts.push({ id: doc.id, ...doc.data() });
-      });
-      setPosts(posts);
-      setLoading(false);
-      return nextResponse;
+    let documentSnapshots = await firstResponse.get();
+
+    let lastVisibleObj =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    const postObj = [];
+    documentSnapshots.forEach(function (doc) {
+      postObj.push({ id: doc.id, ...doc.data() });
     });
+
+    setPosts(postObj);
+    setLastVisible(lastVisibleObj);
+    setLoading(false);
   }
 
-  useEffect(() => {
-    setLoading(true);
-    const nextResponse = firstFetch();
-    // .then((nextResponse) => {
-    //   setLoading(true);
-    //   nextResponse.get().then(function (documentSnapshots) {
-    //     documentSnapshots.forEach(function (doc) {
-    //       posts.push({ id: doc.id, ...doc.data() });
-    //     });
-    //     setPosts(posts);
-    //     setLoading(false);
-    //     console.log(posts);
-    //   });
-    // });
-  }, []);
+  async function moreFetch() {
+    console.log("Retrieving additional Data");
+    let additionalQuery = await cloudDB
+      .collection("tweet")
+      .orderBy("date", "desc")
+      .startAfter(lastVisible)
+      .limit(10);
+
+    let documentSnapshots = await additionalQuery.get();
+
+    let lastVisibleObj =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    const postObj = [];
+    documentSnapshots.forEach(function (doc) {
+      postObj.push({ id: doc.id, ...doc.data() });
+    });
+
+    setPosts([...posts, ...postObj]);
+    setLastVisible(lastVisibleObj);
+    console.log("after more fetch, lastVisibleObj: ", lastVisibleObj);
+    console.log("posts:", posts);
+    setLoading(false);
+  }
 
   function renderSpinner() {
     const variants = [
@@ -105,6 +122,7 @@ function TweetPage(props) {
   return (
     <MyContext.Provider value={{ posts, loading, setNewPost, handleOnNewPost }}>
       <Container>
+        <BottomScrollListener onBottom={moreFetch} />
         <TweetForm />
         {loading && <div>{renderSpinner()}</div>}
         {errorMessage ? <div>{errorMessage}</div> : <TweetPost />}

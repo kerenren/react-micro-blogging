@@ -43,12 +43,15 @@ function App() {
 
     function tweetListner() {
       const newTweet = [];
-      cloudDB.collection("tweet").onSnapshot(function (snapshot) {
-        snapshot.docChanges().forEach(function (change) {
-          newTweet.push(change.doc.data());
+      cloudDB
+        .collection("tweet")
+        .orderBy("date", "desc")
+        .onSnapshot(function (snapshot) {
+          snapshot.docChanges().forEach(function (change) {
+            newTweet.push(change.doc.data());
+          });
+          setTweets(() => [...newTweet]);
         });
-        setTweets(() => [...newTweet]);
-      });
     }
     const unsubscribeTweetListner = cloudDB
       .collection("tweet")
