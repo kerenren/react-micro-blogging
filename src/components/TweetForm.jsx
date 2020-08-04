@@ -15,14 +15,14 @@ class TweetForm extends Component {
     };
   }
 
-  handleOnSubmit(event, onNewPost) {
+  handleOnSubmit(event, setNewPost, handleOnNewPost) {
     event.preventDefault();
-    onNewPost({
+    setNewPost((newPost) => handleOnNewPost({
       content: this.state.content,
       date: new Date().toISOString(),
       userName: window.localStorage.getItem("userName"),
       userId: window.localStorage.getItem("userid"),
-    });
+    }));
     this.setState({
       content: "",
     });
@@ -36,10 +36,12 @@ class TweetForm extends Component {
   render() {
     return (
       <MyContext.Consumer>
-        {({ onNewPost, loading }) => (
+        {({ setNewPost, loading, handleOnNewPost }) => (
           <Container className="input-form-container">
             <Form
-              onSubmit={(event) => this.handleOnSubmit(event, onNewPost)}
+              onSubmit={(event) =>
+                this.handleOnSubmit(event, setNewPost, handleOnNewPost)
+              }
               className="form"
             >
               <Form.Control
@@ -64,10 +66,7 @@ class TweetForm extends Component {
                       </div>
                     )}
                   </Col>
-                  <Col
-                    xs={3}
-                    className="button-container text-right"
-                  >
+                  <Col xs={3} className="button-container text-right">
                     {loading ? (
                       <Button variant="primary" disabled>
                         <Spinner

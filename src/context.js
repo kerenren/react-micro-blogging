@@ -3,7 +3,8 @@ import { createContext } from "react";
 export const MyContext = createContext({
   posts: [],
   loading: true,
-  onNewPost: () => {},
+  setNewPost: () => {},
+  handleOnNewPost: () =>{}
 });
 
 export const UserContext = createContext({

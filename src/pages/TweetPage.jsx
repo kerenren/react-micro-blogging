@@ -1,42 +1,35 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import TweetPost from "../components/TweetPost";
 import TweetForm from "../components/TweetForm";
 import Container from "react-bootstrap/Container";
-import { getTweets, createTweetPost } from "../lib/api";
+import { createTweetPost } from "../lib/api";
 import Spinner from "react-bootstrap/Spinner";
 import { MyContext } from "../context";
+import { cloudDB } from "../lib/firebaseConfig";
 
-class TweetPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: props.tweets,
-      loading: false,
-      errorMsg: null,
-      onNewPost: (newPost) => this.handleOnNewPost(newPost),
-    };
-    this.interval = null;
-  }
+function TweetPage(props) {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [monitoredTweets, setMonitoredTweets] = useState(null);
+  const [newPost, setNewPost] = useState({});
 
-  componentDidUpdate() {
-    if (this.state.posts !== this.props.tweets) {
-      this.setState({ posts: this.props.tweets });
+  useEffect(() => {
+    if (posts.length !== props.tweets.length) {
+      setMonitoredTweets(props.tweets);
     }
-  }
-  
-  handleOnNewPost(newPost) {
-    this.setState({ loading: true });
+  });
+
+  function handleOnNewPost(newPost) {
+    setLoading(true);
     localStorage.setItem("list", JSON.stringify(newPost));
     createTweetPost(newPost)
       .then((res) => {
-        console.log("success post!", res);
-        this.setState((state) => {
-          return {
-            posts: [newPost, ...state.posts],
-            loading: false,
-            errorMsg: null,
-          };
-        });
+        console.log("success post!", newPost, res);
+        setPosts((newPost) => [newPost, ...posts]);
+        firstFetch();
+        setLoading(false);
+        setErrorMessage(null);
       })
       .catch((err) => {
         if (err.response) {
@@ -48,17 +41,52 @@ class TweetPage extends Component {
         } else {
           console.log(`something went wrong: ${err}`);
         }
-        this.setState({ errorMsg: err, loading: false });
+        setErrorMessage(err);
+        setLoading(false);
       });
   }
 
-  async componentDidMount() {
-    this.setState({ loading: true });
-    const posts = await getTweets();
-    this.setState({ posts: posts, loading: false });
+  function firstFetch() {
+    const posts = [];
+    const firstResponse = cloudDB
+      .collection("tweet")
+      .orderBy("date", "desc")
+      .limit(10);
+    firstResponse.get().then(function (documentSnapshots) {
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      console.log("last", lastVisible);
+      const nextResponse = cloudDB
+        .collection("tweet")
+        .orderBy("date", "desc")
+        .startAfter(lastVisible)
+        .limit(10);
+      documentSnapshots.forEach(function (doc) {
+        posts.push({ id: doc.id, ...doc.data() });
+      });
+      setPosts(posts);
+      setLoading(false);
+      return nextResponse;
+    });
   }
 
-  renderSpinner() {
+  useEffect(() => {
+    setLoading(true);
+    const nextResponse = firstFetch();
+    // .then((nextResponse) => {
+    //   setLoading(true);
+    //   nextResponse.get().then(function (documentSnapshots) {
+    //     documentSnapshots.forEach(function (doc) {
+    //       posts.push({ id: doc.id, ...doc.data() });
+    //     });
+    //     setPosts(posts);
+    //     setLoading(false);
+    //     console.log(posts);
+    //   });
+    // });
+  }, []);
+
+  function renderSpinner() {
     const variants = [
       "primary",
       "secondary",
@@ -73,17 +101,16 @@ class TweetPage extends Component {
       return <Spinner animation="grow" variant={variant} key={variant} />;
     });
   }
-  render() {
-    return (
-      <MyContext.Provider value={this.state}>
-        <Container>
-          <TweetForm />
-          {this.state.loading && <div>{this.renderSpinner()}</div>}
-          {this.state.error ? <div>{this.state.error}</div> : <TweetPost />}
-        </Container>
-      </MyContext.Provider>
-    );
-  }
+
+  return (
+    <MyContext.Provider value={{ posts, loading, setNewPost, handleOnNewPost }}>
+      <Container>
+        <TweetForm />
+        {loading && <div>{renderSpinner()}</div>}
+        {errorMessage ? <div>{errorMessage}</div> : <TweetPost />}
+      </Container>
+    </MyContext.Provider>
+  );
 }
 
 export default TweetPage;

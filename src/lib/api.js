@@ -1,19 +1,30 @@
-import {cloudDB} from "./firebaseConfig"
+import { cloudDB } from "./firebaseConfig";
 
-const db = cloudDB
+const db = cloudDB;
 
-export async function getTweets() {
+export  function getTweets() {
   const posts = [];
-  const resp = await db
+  const firstResponse =  db
     .collection("tweet")
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        posts.push({ ...doc.data() });
-      });
-      return posts;
+    .orderBy("date", "desc")
+    .limit(10)
+    
+    return firstResponse.get()
+    .then(function (documentSnapshots) {
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      console.log("last", lastVisible);
+      const nextResponse = db
+        .collection("tweet")
+        .orderBy("date", "desc")
+        .startAfter(lastVisible)
+        .limit(10);
+        documentSnapshots.forEach(function (doc) {
+          posts.push({ id: doc.id, ...doc.data() });
+        });
+      console.log(firstResponse);
+      console.log(nextResponse);
     });
-  return resp;
 }
 
 export function createTweetPost(post) {
